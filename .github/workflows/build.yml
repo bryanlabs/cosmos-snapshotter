@@ -1,21 +1,23 @@
-name: Build and Push Docker Image
+name: Lint, Build and Push Docker Image
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - 'v*'
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  push:
     branches:
       - main
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: bryanlabs/cosmos-snapshotter
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   lint:
+    name: Lint Code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,7 +28,8 @@ jobs:
         with:
           scandir: './scripts'
 
-  build:
+  build-and-push:
+    name: Build and Push AMD64/ARM64 Image
     needs: lint
     runs-on: ubuntu-latest
     permissions:
@@ -45,20 +48,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
