@@ -8,6 +8,8 @@ RUN git clone https://github.com/binaryholdings/cosmprund /cosmprund && \
 
 FROM alpine:3.19
 
+LABEL org.opencontainers.image.source=https://github.com/bryanlabs/cosmos-snapshotter
+
 # Install required tools
 RUN apk add --no-cache \
     bash \
