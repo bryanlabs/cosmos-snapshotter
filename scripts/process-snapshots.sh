@@ -20,7 +20,7 @@ mc policy set download "snapshots/${MINIO_BUCKET}"
 echo "Finding VolumeSnapshots in fullnodes namespace..."
 SNAPSHOTS=$(kubectl get volumesnapshots -n fullnodes -o json | \
   jq -r '.items[] | select(.status.readyToUse==true) | 
-  {name: .metadata.name, chain: (.metadata.labels."cosmos.strange.love/chain-id" // "unknown")} | 
+  {name: .metadata.name, chain: (.metadata.labels."blockchain.bryanlabs.net/chain-id" // "unknown")} | 
   @base64')
 
 if [ -z "$SNAPSHOTS" ]; then
