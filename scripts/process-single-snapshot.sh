@@ -37,7 +37,7 @@ kubectl apply -f pvc.yaml
 
 # Wait for PVC to be bound
 echo "Waiting for PVC to be bound..."
-kubectl wait --for=condition=Bound pvc/snapshot-pvc-${TIMESTAMP} -n apps --timeout=300s
+kubectl wait --for=condition=Bound "pvc/snapshot-pvc-${TIMESTAMP}" -n apps --timeout=300s
 
 # Create processing job
 cat > job.yaml <<EOF
@@ -165,12 +165,12 @@ kubectl apply -f job.yaml
 
 # Wait for job to complete
 echo "Waiting for processing job to complete..."
-kubectl wait --for=condition=complete job/process-${SNAPSHOT_NAME}-${TIMESTAMP} -n apps --timeout=3600s
+kubectl wait --for=condition=complete "job/process-${SNAPSHOT_NAME}-${TIMESTAMP}" -n apps --timeout=3600s
 
 # Cleanup
 echo "Cleaning up resources..."
-kubectl delete job process-${SNAPSHOT_NAME}-${TIMESTAMP} -n apps
-kubectl delete pvc snapshot-pvc-${TIMESTAMP} -n apps
+kubectl delete job "process-${SNAPSHOT_NAME}-${TIMESTAMP}" -n apps
+kubectl delete pvc "snapshot-pvc-${TIMESTAMP}" -n apps
 
 # Clean up working directory
 cd /

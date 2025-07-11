@@ -11,10 +11,10 @@ MINIO_BUCKET="${MINIO_BUCKET:-snapshots}"
 mc alias set snapshots "http://${MINIO_ENDPOINT}" "${MINIO_ACCESS_KEY}" "${MINIO_SECRET_KEY}"
 
 # Create bucket if it doesn't exist
-mc mb snapshots/${MINIO_BUCKET} --ignore-existing
+mc mb "snapshots/${MINIO_BUCKET}" --ignore-existing
 
 # Set public download policy
-mc policy set download snapshots/${MINIO_BUCKET}
+mc policy set download "snapshots/${MINIO_BUCKET}"
 
 # Get list of VolumeSnapshots from fullnodes namespace
 echo "Finding VolumeSnapshots in fullnodes namespace..."
